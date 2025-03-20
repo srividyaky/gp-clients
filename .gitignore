@@ -15,9 +15,9 @@ venv/
 # Logs
 logs/
 
-# GitHub-related (but keep pipeline.yml)
-.github/*
-!.github/pipeline.yml
+## GitHub-related (but keep pipeline.yml)
+#.github/*
+#!.github/pipeline.yml
 
 # Misc
 *.log
