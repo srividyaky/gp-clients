@@ -13,6 +13,11 @@ jobs:
     
     steps:
     - uses: actions/checkout@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
 
     - name: Check Python version
       run: |
@@ -21,9 +26,11 @@ jobs:
 
     - name: Install dependencies
       run: |
-        python3 -m pip install --upgrade pip || sudo python3 -m pip install --upgrade pip
-        if [ -f requirements.txt ]; then python3 -m pip install -r requirements.txt || sudo python3 -m pip install -r requirements.txt; fi
-        python3 -m pip install pytest || sudo python3 -m pip install pytest
+        python3 -m venv venv
+        source venv/bin/activate
+        python3 -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install pytest
 
     - name: Debug environment
       run: |
