@@ -44,9 +44,10 @@ jobs:
         
     - name: Check connectivity
       run: |
+        # Install netcat if not available
+        which nc || sudo apt-get update && sudo apt-get install -y netcat
+        # Then try the connection test
         nc -zv ${{ secrets.GPDB_HOST }} 22 || echo "Cannot reach SSH port"
-        # Also check the Greenplum port if different
-        # nc -zv ${{ secrets.GPDB_HOST }} 5432 || echo "Cannot reach Greenplum port"
 
     - name: Run tests
       env:
@@ -54,4 +55,5 @@ jobs:
         GPDB_USERNAME: ${{ secrets.GPDB_USERNAME }}
         GPDB_PASSWORD: ${{ secrets.GPDB_PASSWORD }}
       run: |
+        source venv/bin/activate
         pytest -v tests/test_core_tools.py || echo "Tests failed but continuing workflow"
