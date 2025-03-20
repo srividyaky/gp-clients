@@ -1,0 +1,23 @@
+# Python-related
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+.venv/
+env/
+venv/
+
+# IDE-related (for JetBrains IDEs, etc.)
+.idea/
+
+# Logs
+logs/
+
+# GitHub-related (but keep pipeline.yml)
+.github/*
+!.github/pipeline.yml
+
+# Misc
+*.log
