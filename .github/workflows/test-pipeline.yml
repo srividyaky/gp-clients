@@ -34,6 +34,12 @@ jobs:
         python --version
         echo "Installed packages:"
         pip list
+        
+    - name: Check connectivity
+      run: |
+        nc -zv ${{ secrets.GPDB_HOST }} 22 || echo "Cannot reach SSH port"
+        # Also check the Greenplum port if different
+        # nc -zv ${{ secrets.GPDB_HOST }} 5432 || echo "Cannot reach Greenplum port"
 
     - name: Run tests
       env:
