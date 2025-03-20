@@ -7,6 +7,7 @@ on:
     branches: [ main ]
   schedule:
     - cron: '0 0 * * *'  # Run daily at midnight
+  workflow_dispatch:  # This enables manual triggering
 
 jobs:
   test:
@@ -29,7 +30,8 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        pip install pytest pytest-html
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
     - name: Create test directories
       run: |
@@ -42,19 +44,7 @@ jobs:
         GPDB_USERNAME: ${{ secrets.GPDB_USERNAME }}
         GPDB_PASSWORD: ${{ secrets.GPDB_PASSWORD }}
       run: |
-          pytest -v tests/test_core_tools.py 
-
-       
-
-    # Uncomment below if you set up data load testing
-     # pytest -v tests/test_core_tools.py tests/test_monitoring_tools.py
-    # - name: Run data load tests
-    #   env:
-    #     GPDB_HOST: ${{ secrets.GPDB_HOST }}
-    #     GPDB_USERNAME: ${{ secrets.GPDB_USERNAME }}
-    #     GPDB_PASSWORD: ${{ secrets.GPDB_PASSWORD }}
-    #   run: |
-    #     pytest -v tests/test_data_load_tools.py
+        pytest -v tests/test_core_tools.py
 
     - name: Generate test report
       if: always()
@@ -63,14 +53,14 @@ jobs:
 
     - name: Upload test report
       if: always()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v2  # Changed to v2 to avoid potential issues
       with:
         name: test-report
         path: report.html
 
     - name: Upload logs
       if: always()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v2  # Changed to v2 to avoid potential issues
       with:
         name: test-logs
         path: logs/
